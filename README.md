@@ -19,7 +19,7 @@ Google Images Scraper is a Python tool designed to scrape high-resolution images
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/google-images-scraper.git
+   git clone https://github.com/jwiedeman/google-images-scraper.git
    ```
 
 2. Navigate to the project directory:
@@ -28,7 +28,7 @@ Google Images Scraper is a Python tool designed to scrape high-resolution images
    cd google-images-scraper
    ```
 
-3. Create the environment:
+3. Create the virtual environment:
 
    ```bash
    python -m venv .venv
@@ -39,15 +39,13 @@ Google Images Scraper is a Python tool designed to scrape high-resolution images
    # For Linux
    source .venv/bin/activate
 
-   # For Windows
-   
-   # For Powershell
+   # For Windows Powershell
    .venv/Scripts/Activate.ps1
-   # For Command Prompt
+   # For Windows Command Prompt
    .venv/Scripts/activate.bat
    ```
 
-4. Install the required dependencies:
+5. Install the required dependencies:
 
    ```bash
    pip install -r requirements.txt
@@ -86,12 +84,12 @@ You can customize the behavior of the scraper by modifying the `config.yaml` fil
 
 ### Images Limit
 
-- `images_limit`: Set the maximum number of images to download per category.
+- `images_limit`: Set the maximum number of images to download per category. Google tends to load a maximum of 250 images, but can be lower, 200 is reccomended. 
 <br>
 
 ### Project Info
 
-- `csv_downloads`: Directory to store CSV files.
+- `csv_downloads`: Directory to store CSV files containg the original link to each image downloaded.
 - `image_downloads`: Directory to store downloaded images.
 - `downloader.py`: Contains class to download images using multi-threading.
 - `email_service.py`: Provides functionality for email notifications (if needed).
@@ -141,6 +139,19 @@ Contributions to Google Images Scraper are welcome and encouraged! To contribute
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Todo & Completed additions
+- [x] Image deduplication, when saving images, we now ensure the same image isnt already saved using `imagehash`. 
+- [x] Image saved name uses the next index of the count of images in the result folder, this avoids overwriting images with the same name on subsequent crawls.
+- [x] Removed sleeps to speed the process up, will wait for element visibility and immieditely continue.
+- [x] Updated Selectors for element interaction
+- [x] Added a new case to "scroll more" there are now 3 distinct messages we can recieve that may block scrolling unless clicked.
+- [ ] ML Image augmentation export
+- [ ] Export downloaded images as a YoloV[X] dataset.
+- [ ] Speed up image downloading process
+- [ ] Check images pre download against the downloaded links csv to avoid downloading then processing hashes for efficiency.
+- [ ] Import search terms via csv
+- [ ] CLI commands to clear folders, export, resume where left off   
 
 ## Disclaimer
 This program lets you download tons of images from Google Images. Please do not download or use any image that violates its copyright terms.
