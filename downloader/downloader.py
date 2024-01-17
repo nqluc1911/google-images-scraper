@@ -4,6 +4,7 @@ import io
 from PIL import Image
 import os
 import time
+import imagehash
 
 class Downloader:
 
@@ -48,27 +49,46 @@ class Downloader:
         self._create_threads()
         self._destroy_threads()
         
-    def download_image(self, thread_num,  start_idx, end_idx):
-            print(f"Thread {thread_num} running: ")
-            # for link in enumerate(self.__image_links):
-            for i in range(start_idx, end_idx):
-                try:
-                    file_name = f"{self.__category}_{i + 1}.jpg"
-                    image_content = req.get(self.__image_links[i], timeout = 10).content
-                    image_file = io.BytesIO(image_content)
-                    pil_image = Image.open(image_file)
-                except Exception as e:
-                    print(f"🔴🔴🔴 Error while downloading the image: {i + 1}! 🔴🔴🔴")
+    def is_duplicate(self, image, threshold=5):
+        hash_new_image = imagehash.average_hash(image)
+
+        for existing_image_file in os.listdir(f"{self.__path}/{self.__category}"):
+            existing_image_path = os.path.join(self.__path, self.__category, existing_image_file)
+            existing_image = Image.open(existing_image_path)
+            hash_existing_image = imagehash.average_hash(existing_image)
+
+            if hash_new_image - hash_existing_image < threshold:
+                return True
+        return False
+
+    def download_image(self, thread_num, start_idx, end_idx):
+        print(f"Thread {thread_num} running: ")
+        for i in range(start_idx, end_idx):
+            try:
+                image_content = req.get(self.__image_links[i], timeout=10).content
+                image_file = io.BytesIO(image_content)
+                pil_image = Image.open(image_file)
+            except Exception as e:
+                print(f"🔴🔴🔴 Error while downloading the image: {i + 1}! 🔴🔴🔴")
+                continue
+
+            if len(pil_image.getbands()) == 3:
+                if self.is_duplicate(pil_image):
+                    print(f"🟡🟡 Duplicate image found, skipping image 🟡🟡")
                     continue
 
-                if len(pil_image.getbands()) == 3:
-                    try:
-                        file_path = f"{self.__path}/{self.__category}/{file_name}"
-                        with open(file_path, "wb") as f:
-                            pil_image.save(f)
-                        print("Downloaded: ", file_name)
-                    except Exception as e:
-                        print(f"🔴🔴🔴 Error while saving the image no: {i + 1} 🔴🔴🔴")
-                else:
-                    print("🔵🔵 An image with alpha channel found, hence discarding it!! 🔵🔵")
+                try:
+                    file_name = self.get_next_filename(self.__category)
+                    file_path = f"{self.__path}/{self.__category}/{file_name}"
+                    with open(file_path, "wb") as f:
+                        pil_image.save(f)
+                    print("Downloaded: ", file_name)
+                except Exception as e:
+                    print(f"🔴🔴🔴 Error while saving the image no: {i + 1} 🔴🔴🔴")
+            else:
+                print("🔵🔵 An image with alpha channel found, hence discarding it!! 🔵🔵")
 
+    def get_next_filename(self, category):
+        existing_files = os.listdir(f"{self.__path}/{category}")
+        file_count = len(existing_files)
+        return f"{category}_{file_count + 1}.jpg"

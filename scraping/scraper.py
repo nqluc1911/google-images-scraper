@@ -58,14 +58,17 @@ class Scraper:
         while len(thumbnails) < self.__image_limit:
             print("🤖: Scrolling...")
             driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
-            time.sleep(3)
             thumbnails = get_thumbnails()
-            time.sleep(3)
+
             try:
                 end_of_page = driver.find_element(By.XPATH, """//input[@class='LZ4I']""").is_displayed()
+                end_of_page2 = driver.find_element(By.XPATH, """//span[@class='XfJHbe']""").is_displayed()
                 no_more_results = driver.find_element(By.XPATH, """//div[@class='OuJzKb Yu2Dnd']""").is_displayed()
                 if end_of_page:
                     driver.find_element(By.XPATH, """//input[@class='LZ4I']""").click()
+                    
+                if end_of_page2:
+                    driver.find_element(By.XPATH, """//span[@class='XfJHbe']""").click()
 
                 if no_more_results:
                     break
@@ -74,7 +77,6 @@ class Scraper:
 
         print(f"🤖: Found a total of {len(thumbnails)} image thumbnails!") 
         driver.execute_script("window.scrollTo(0,0)")
-        time.sleep(2)
         return thumbnails
 
     def _get_images(self, driver):
@@ -95,9 +97,8 @@ class Scraper:
                     # print(len(self.__images))
                     thumbnails[index].click()
                     # print(index)
-                    time.sleep(2)
-                    wait.until(EC.visibility_of_element_located((By.XPATH, """//img[@class='r48jcc pT0Scc iPVvYb']""")))
-                    img_window = driver.find_element(By.XPATH, """//img[@class='r48jcc pT0Scc iPVvYb']""")
+                    wait.until(EC.visibility_of_element_located((By.XPATH, """//img[@class='sFlh5c pT0Scc iPVvYb']""")))
+                    img_window = driver.find_element(By.XPATH, """//img[@class='sFlh5c pT0Scc iPVvYb']""")
                     # time.sleep(2)
                     link = img_window.get_attribute('src')
                     self.__images.add(link)
