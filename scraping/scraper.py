@@ -1,4 +1,6 @@
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -40,7 +42,9 @@ class Scraper:
         self.__options.add_argument("incognito")
         if not self.__show_ui:
             self.__options.add_argument("headless")
-        driver = webdriver.Chrome()
+        self.__options.add_argument('--no-sandbox')
+        self.__options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.__options)
         driver.get("https://www.google.com/imghp?hl=en")
         self.__drivers.append(driver)
 
