@@ -45,6 +45,28 @@ class Scraper:
         self.__options.add_argument('--no-sandbox')
         self.__options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.__options)
+        browser_version = 'Failed to detect version'
+        chromedriver_version = 'Failed to detect version'
+        major_version_different = False
+
+        if 'browserVersion' in driver.capabilities:
+            browser_version = str(driver.capabilities['browserVersion'])
+
+        if 'chrome' in driver.capabilities:
+            if 'chromedriverVersion' in driver.capabilities['chrome']:
+                chromedriver_version = str(driver.capabilities['chrome']['chromedriverVersion']).split(' ')[0]
+
+        if browser_version.split('.')[0] != chromedriver_version.split('.')[0]:
+            major_version_different = True
+
+        print('_________________________________')
+        print('Current web-browser version:\t{}'.format(browser_version))
+        print('Current chrome-driver version:\t{}'.format(chromedriver_version))
+        if major_version_different:
+            print('warning: Version different')
+            print(
+                'Download correct version at "http://chromedriver.chromium.org/downloads" and place in "./chromedriver"')
+        print('_________________________________')
         driver.get("https://www.google.com/imghp?hl=en")
         self.__drivers.append(driver)
 
