@@ -47,6 +47,7 @@ class Scraper:
         else:
             self.__options.add_argument('--start-maximized')
         self.__options.add_argument('--disable-dev-shm-usage')
+        self.__options.add_argument('--start-maximized')
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.__options)
         browser_version = 'Failed to detect version'
         chromedriver_version = 'Failed to detect version'
@@ -138,6 +139,8 @@ class Scraper:
                     break
                                     
             except Exception as e:
+                # print(thumbnails[index])
+                # time.sleep(1000)
                 print(" \n🔴🔴 Link not found! 🔴🔴")
                 continue
 

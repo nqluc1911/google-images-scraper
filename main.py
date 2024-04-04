@@ -18,7 +18,7 @@ def main():
     send_email_bool = config['send_email']
 
     print("Scraping: ",search_queries)
-    scraper = Scraper(num_threads = 2, show_ui = False)
+    scraper = Scraper(num_threads = 1, show_ui = True)
     email_sender = EmailSender(
         sender = sender_email,
         receiver = receiver_email,
