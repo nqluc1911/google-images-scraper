@@ -43,6 +43,9 @@ class Scraper:
         if not self.__show_ui:
             self.__options.add_argument("headless")
             self.__options.add_argument('--no-sandbox')
+            self.__options.add_argument("--window-size=1920,1080")
+        else:
+            self.__options.add_argument('--start-maximized')
         self.__options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.__options)
         browser_version = 'Failed to detect version'
