@@ -10,9 +10,6 @@ image_path: "./image_downloads"
 
 # Queries
 search_queries:
-  - dog
-  - cat
-  - chicken
-
+  - điếu cày
 # Max Image Limit
 images_limit: 20
