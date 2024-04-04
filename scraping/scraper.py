@@ -42,7 +42,7 @@ class Scraper:
         self.__options.add_argument("incognito")
         if not self.__show_ui:
             self.__options.add_argument("headless")
-        self.__options.add_argument('--no-sandbox')
+            self.__options.add_argument('--no-sandbox')
         self.__options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.__options)
         browser_version = 'Failed to detect version'
@@ -74,7 +74,8 @@ class Scraper:
         def get_thumbnails():
             try:
                 print("\nFetching image thumbnails...")
-                thumbnails = driver.find_elements(By.XPATH, "//div[@class='isv-r PNCib ViTmJb BUooTd']")
+                thumbnails = driver.find_elements(By.XPATH, "//div[@class='eA0Zlc WghbWd FnEtTd mkpRId m3LIae RLdvSe qyKxnc ivg-i PZPZlf GMCzAd']")
+                # thumbnails = driver.find_elements(By.XPATH, "//div[@class='isv-r PNCib ViTmJb BUooTd']")
                 print(f"🤖: Found {len(thumbnails)} image thumbnails!")
             except Exception as e:
                 print("\n🔴🔴 Error while fetching image containers! 🔴🔴")
